@@ -2,7 +2,7 @@ name: Telegram Bot Forwarder
 
 on:
   schedule:
-    - cron: "*/30 * * * *"  # هر نیم‌ساعت
+    - cron: "* * * * *"  # هر نیم‌ساعت
   workflow_dispatch:
 
 jobs:
