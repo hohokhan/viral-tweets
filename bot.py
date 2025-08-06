@@ -7,7 +7,7 @@ from telegram.error import TelegramError
 
 # تنظیمات
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL_FROM = -1002683144342
+CHANNEL_FROM = '@PHISHTE'
 CHANNEL_TO = '@xixtweet'
 MENTION_TAG = "@xixtweet"
 TEMP_CHAT_ID = 8049174660  # آیدی عددی خودت یا گروه تست
