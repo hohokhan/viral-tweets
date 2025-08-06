@@ -6,7 +6,7 @@ import re
 # تنظیمات
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_FROM = '@XIXTEST1'
-CHANNEL_TO = '@Channel2Username'  # تغییر بده به کانال مقصد
+CHANNEL_TO = '@XIXTEST2'  # تغییر بده به کانال مقصد
 
 bot = Bot(token=BOT_TOKEN)
 
