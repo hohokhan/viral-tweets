@@ -9,7 +9,7 @@ from telegram.error import TelegramError
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_FROM = '@XIXTEST1'
 CHANNEL_TO = '@XIXTEST2'
-MENTION_TAG = "😂@XIXTEST2"
+MENTION_TAG = "ــــــــــ @XIXTEST2 ــــــــــ"
 TEMP_CHAT_ID = 8049174660  # آیدی عددی خودت یا گروه تست
 
 bot = Bot(token=BOT_TOKEN)
