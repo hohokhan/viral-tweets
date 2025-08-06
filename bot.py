@@ -9,7 +9,7 @@ from telegram.error import TelegramError
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_FROM = '@XIXTEST1'
 CHANNEL_TO = '@XIXTEST2'
-MENTION_TAG = "ــــــــــ @XIXTEST2 ــــــــــ"
+MENTION_TAG = "@XIXTEST2"
 TEMP_CHAT_ID = 8049174660  # آیدی عددی خودت یا گروه تست
 
 bot = Bot(token=BOT_TOKEN)
@@ -22,7 +22,7 @@ def clean_text(text):
     # حذف لینک‌های t.me
     text = re.sub(r'https?://t\.me/\S+', '', text)
     # حذف فاصله‌های اضافه
-    text = re.sub(r'\n{2,}', '\n', text).strip()
+   
     return text + "\n\n" + MENTION_TAG
 
 def git_commit_push():
