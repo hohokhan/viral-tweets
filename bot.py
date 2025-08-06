@@ -10,7 +10,8 @@ MENTION_TAG = "@XIXTEST2"
 
 # یوزر آیدی خودت (عددی) که ربات اجازه داره بهش فوروارد کنه
 # اگه نداری، می‌تونی یه گروه بزنی و ربات رو ادمینش کنی و آیدی اون گروه رو بذاری
-TEMP_CHAT_ID = int(os.getenv("TEMP_CHAT_ID"))  # مثل 123456789
+TEMP_CHAT_ID = 8049174660
+  # مثل 123456789
 
 def clean_text(text):
     if not text:
