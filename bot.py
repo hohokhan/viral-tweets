@@ -1,6 +1,7 @@
-from telegram import Bot
 import os
 import re
+from telegram import Bot
+from telegram.error import TelegramError
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_FROM = '@XIXTEST1'
@@ -9,42 +10,65 @@ MENTION_TAG = '@XIXTEST2'
 
 bot = Bot(token=BOT_TOKEN)
 
-# مرحله 1: خواندن لینک
-with open("post.txt", "r") as f:
-    url = f.read().strip()
+def clean_text(text):
+    if not text:
+        return MENTION_TAG
+    # حذف @username و لینک‌های t.me
+    text = re.sub(r'@\w+', '', text)
+    text = re.sub(r'https?://t\.me/\S+', '', text)
+    text = re.sub(r'\n{2,}', '\n', text).strip()
+    return text + "\n\n" + MENTION_TAG
 
-match = re.match(r'https://t\.me/[^/]+/(\d+)', url)
-if not match:
-    raise ValueError("❌ لینک معتبر نیست.")
-message_id = int(match.group(1))
+def main():
+    # خواندن لینک از فایل
+    with open("post.txt", "r") as f:
+        url = f.read().strip()
 
-try:
-    # مرحله 2: دریافت پیام
-    msg = bot.forward_message(chat_id=CHANNEL_TO, from_chat_id=CHANNEL_FROM, message_id=message_id)
+    match = re.match(r'https://t\.me/[^/]+/(\d+)', url)
+    if not match:
+        print("❌ لینک معتبر نیست.")
+        return
 
-    # مرحله 3: تعیین متن نهایی (برای پیام‌های متنی یا کپشن‌دار)
-    if msg.text:
-        text = re.sub(r'@\w+', '', msg.text)
-        text = re.sub(r'https?://t\.me/\S+', '', text).strip()
-        final_text = text + "\n\n" + MENTION_TAG
-        bot.send_message(chat_id=CHANNEL_TO, text=final_text)
-    elif msg.caption and msg.photo:
-        text = re.sub(r'@\w+', '', msg.caption)
-        text = re.sub(r'https?://t\.me/\S+', '', text).strip()
-        final_text = text + "\n\n" + MENTION_TAG
-        bot.send_photo(chat_id=CHANNEL_TO, photo=msg.photo[-1].file_id, caption=final_text)
-    else:
-        # fallback: فقط فوروارد کن
-        bot.copy_message(chat_id=CHANNEL_TO, from_chat_id=CHANNEL_FROM, message_id=message_id)
+    message_id = int(match.group(1))
+    print(f"📥 پیام در حال پردازش: {message_id}")
 
-    print(f"✅ پست {message_id} ارسال شد.")
+    try:
+        # پیام رو به صورت موقت برای پردازش فوروارد می‌کنیم به خودمون
+        temp_chat_id = 8049174660  # آیدی عددی خودت
+        temp_msg = bot.forward_message(chat_id=temp_chat_id, from_chat_id=CHANNEL_FROM, message_id=message_id)
 
-    # مرحله 4: آپدیت لینک در فایل
-    new_url = f"https://t.me/XIXTEST1/{message_id + 1}"
-    with open("post.txt", "w") as f:
-        f.write(new_url)
-    print(f"📤 post.txt بروزرسانی شد به: {new_url}")
+        # صبر می‌کنیم مطمئن بشیم پیام رسید
+        import time
+        time.sleep(1)
 
-except Exception as e:
-    print(f"❌ خطا در ارسال پیام: {e}")
-    exit(1)
+        # بررسی نوع پیام و ارسال با متن پاک‌شده
+        if temp_msg.text:
+            final_text = clean_text(temp_msg.text)
+            bot.send_message(chat_id=CHANNEL_TO, text=final_text)
+            print("✅ پیام متنی ارسال شد.")
+
+        elif temp_msg.caption and temp_msg.photo:
+            final_text = clean_text(temp_msg.caption)
+            bot.send_photo(chat_id=CHANNEL_TO, photo=temp_msg.photo[-1].file_id, caption=final_text)
+            print("✅ عکس با کپشن ارسال شد.")
+
+        elif temp_msg.caption and temp_msg.video:
+            final_text = clean_text(temp_msg.caption)
+            bot.send_video(chat_id=CHANNEL_TO, video=temp_msg.video.file_id, caption=final_text)
+            print("✅ ویدیو با کپشن ارسال شد.")
+
+        else:
+            print("ℹ️ پیام پشتیبانی نمی‌شود، ارسال نشد.")
+            return
+
+        # آپدیت فایل فقط در صورت ارسال موفق
+        new_url = f"https://t.me/XIXTEST1/{message_id + 1}"
+        with open("post.txt", "w") as f:
+            f.write(new_url)
+        print(f"📤 post.txt آپدیت شد به: {new_url}")
+
+    except TelegramError as e:
+        print(f"❌ خطا در ارسال: {e}")
+
+if __name__ == "__main__":
+    main()
