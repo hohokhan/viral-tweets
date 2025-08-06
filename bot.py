@@ -23,7 +23,7 @@ def clean_text(text):
     text = re.sub(r'https?://t\.me/\S+', '', text)
     # حذف فاصله‌های اضافه
    
-    return text + "\n\n" + MENTION_TAG
+    return text + "\n" + MENTION_TAG
 
 def git_commit_push():
     try:
