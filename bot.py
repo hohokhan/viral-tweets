@@ -8,8 +8,8 @@ from telegram.error import TelegramError
 # تنظیمات
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL_FROM = '@PHISHTE'
-CHANNEL_TO = '@xixtweet'
-MENTION_TAG = "@xixtweet"
+CHANNEL_TO = '@XIXTEST2'
+MENTION_TAG = "@XIXTEST2"
 TEMP_CHAT_ID = 8049174660  # آیدی عددی خودت یا گروه تست
 
 bot = Bot(token=BOT_TOKEN)
